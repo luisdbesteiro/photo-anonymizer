@@ -109,8 +109,7 @@ def parse_args() -> argparse.Namespace:
         default=MIN_FACE_CONFIDENCE,
         help=(
             "Confianza minima solicitada entre 0 y 1 para modo normal. "
-            f"La app nunca baja de {MIN_FACE_CONFIDENCE} en caras ni de "
-            f"{MIN_STANDALONE_PLATE_CONFIDENCE} en matriculas sin contexto."
+            f"La prueba no baja de {MIN_STANDALONE_PLATE_CONFIDENCE} en matriculas directas."
         ),
     )
     parser.add_argument(
@@ -233,7 +232,7 @@ def main() -> int:
                 diagnostic_rows.extend(build_diagnostic_rows(image_path, diagnostic_detections))
                 output_image = draw_diagnostic_detections(image, diagnostic_detections)
                 output_path = make_output_path(image_path, output_dir, suffix="_diagnostico")
-                if not write_image(output_path, output_image):
+                if not write_image(output_path, output_image, source_path=image_path):
                     raise ValueError("No se pudo guardar la imagen procesada.")
 
                 processed += 1
@@ -265,7 +264,7 @@ def main() -> int:
                 plate_boxes = detect_plates(
                     image,
                     plate_model,
-                    args.confidence,
+                    max(args.confidence, MIN_STANDALONE_PLATE_CONFIDENCE),
                     vehicle_model,
                     context_confidence=args.plate_context_confidence,
                 )
@@ -277,7 +276,7 @@ def main() -> int:
                 anonymized = draw_detections(anonymized, face_boxes, plate_boxes)
 
             output_path = make_output_path(image_path, output_dir)
-            if not write_image(output_path, anonymized):
+            if not write_image(output_path, anonymized, source_path=image_path):
                 raise ValueError("No se pudo guardar la imagen procesada.")
 
             processed += 1

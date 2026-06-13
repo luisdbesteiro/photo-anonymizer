@@ -11,7 +11,7 @@ VEHICLE_CLASS_NAMES = {"car", "motorcycle", "bus", "truck"}
 PLATE_IMAGE_SIZE = 1600
 VEHICLE_IMAGE_SIZE = 1280
 RAW_CONFIDENCE = 0.01
-MIN_CONTEXT_PLATE_CONFIDENCE = RAW_CONFIDENCE
+MIN_CONTEXT_PLATE_CONFIDENCE = 0.20
 MIN_STANDALONE_PLATE_CONFIDENCE = 0.90
 MIN_VEHICLE_CONFIDENCE = 0.25
 
@@ -19,9 +19,10 @@ MIN_VEHICLE_CONFIDENCE = 0.25
 def detect_plates(
     image: np.ndarray,
     model_path=DEFAULT_PLATE_MODEL,
-    confidence: float = 0.50,
+    confidence: float = MIN_STANDALONE_PLATE_CONFIDENCE,
     vehicle_model_path=DEFAULT_VEHICLE_MODEL,
     context_confidence: float = MIN_CONTEXT_PLATE_CONFIDENCE,
+    vehicle_confidence: float = MIN_VEHICLE_CONFIDENCE,
 ) -> list[Box]:
     plate_detections = detect_with_yolo_details(image, model_path, RAW_CONFIDENCE, image_size=PLATE_IMAGE_SIZE)
 
@@ -35,7 +36,7 @@ def detect_plates(
             continue
         if _looks_like_timestamp_overlay((x, y, w, h), image.shape):
             continue
-        if score >= max(confidence, MIN_STANDALONE_PLATE_CONFIDENCE):
+        if score >= max(confidence, RAW_CONFIDENCE):
             plate_boxes.append((x, y, w, h))
             continue
         if score >= max(context_confidence, RAW_CONFIDENCE):
@@ -45,7 +46,7 @@ def detect_plates(
         vehicle_boxes = detect_with_yolo_details(
             image,
             vehicle_model_path,
-            MIN_VEHICLE_CONFIDENCE,
+            max(vehicle_confidence, RAW_CONFIDENCE),
             class_names=VEHICLE_CLASS_NAMES,
             image_size=VEHICLE_IMAGE_SIZE,
         )
