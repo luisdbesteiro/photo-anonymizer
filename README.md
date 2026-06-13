@@ -21,14 +21,22 @@ Se abrira una ventana donde puedes:
 - Elegir la carpeta de salida.
 - Elegir desenfoque, pixelado o recuadro negro.
 - Activar o desactivar deteccion de caras y matriculas.
+- Activar `Guardar anotadas (debug)` para guardar copias con las cajas detectadas dibujadas.
+- Abrir `Confianzas avanzadas` para ajustar los umbrales con sliders si necesitas afinar la deteccion.
 
 Al seleccionar una carpeta, la salida se propone automaticamente en una carpeta nueva junto a la original, con el sufijo `_anonimizadas`. Por ejemplo, si eliges `C:\Fotos\Coches`, la salida sera `C:\Fotos\Coches_anonimizadas`.
+
+Las confianzas avanzadas mantienen por defecto los valores recomendados de la aplicacion. Bajarlas puede detectar mas zonas, pero tambien puede generar mas falsos positivos.
+
+Si activas el modo debug, se crea otra carpeta junto a la original con el sufijo `_anotadas`. Por ejemplo, `C:\Fotos\Coches` guardara esas copias en `C:\Fotos\Coches_anotadas`.
 
 Las imagenes procesadas se guardan como copias con nombres como:
 
 ```text
 foto_001_anonimizada.jpg
 ```
+
+La herramienta intenta conservar en las copias anonimizadas los metadatos de la fotografia original, como EXIF, perfil de color, DPI y textos de PNG cuando el formato lo permite. Ten en cuenta que esos metadatos pueden incluir informacion sensible, por ejemplo ubicacion GPS si la camara o el movil la guardo.
 
 ## Carpetas
 
