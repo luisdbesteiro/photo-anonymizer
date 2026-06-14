@@ -1,3 +1,5 @@
+# Dependencias directas de la aplicacion.
+# No listar dependencias transitivas como torch: las instala ultralytics.
 opencv-python>=4.8.0
 pillow>=10.0.0
 numpy>=1.24.0
