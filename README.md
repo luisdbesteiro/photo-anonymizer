@@ -21,7 +21,7 @@ Se abrira una ventana donde puedes:
 - Elegir la carpeta de salida.
 - Elegir desenfoque, pixelado o recuadro negro.
 - Activar o desactivar deteccion de caras y matriculas.
-- Activar `Guardar anotadas (debug)` para guardar copias con las cajas detectadas dibujadas.
+- Activar `Guardar anotadas (debug)` para guardar copias con caras, matriculas y vehiculos detectados dibujados.
 - Abrir `Confianzas avanzadas` para ajustar los umbrales con sliders si necesitas afinar la deteccion.
 
 Al seleccionar una carpeta, la salida se propone automaticamente en una carpeta nueva junto a la original, con el sufijo `_anonimizadas`. Por ejemplo, si eliges `C:\Fotos\Coches`, la salida sera `C:\Fotos\Coches_anonimizadas`.
@@ -29,6 +29,7 @@ Al seleccionar una carpeta, la salida se propone automaticamente en una carpeta 
 Las confianzas avanzadas mantienen por defecto los valores recomendados de la aplicacion. Bajarlas puede detectar mas zonas, pero tambien puede generar mas falsos positivos.
 
 Si activas el modo debug, se crea otra carpeta junto a la original con el sufijo `_anotadas`. Por ejemplo, `C:\Fotos\Coches` guardara esas copias en `C:\Fotos\Coches_anotadas`.
+Las imagenes anotadas muestran las detecciones de caras, matriculas y vehiculos que superan las confianzas actuales, con su etiqueta y puntuacion. Sirven para diagnosticar los modelos; no son necesariamente solo las zonas finalmente anonimizadas.
 
 Las imagenes procesadas se guardan como copias con nombres como:
 
@@ -37,6 +38,14 @@ foto_001_anonimizada.jpg
 ```
 
 La herramienta intenta conservar en las copias anonimizadas los metadatos de la fotografia original, como EXIF, perfil de color, DPI y textos de PNG cuando el formato lo permite. Ten en cuenta que esos metadatos pueden incluir informacion sensible, por ejemplo ubicacion GPS si la camara o el movil la guardo.
+
+## Desinstalar en Windows
+
+Haz doble clic en `uninstall_windows.bat`.
+
+El script elimina el entorno virtual `.venv`, que es donde se instalan las dependencias de Python de esta herramienta. Tambien puede borrar, si lo confirmas, los modelos descargados, los logs y las carpetas de salida locales.
+
+No desinstala Python del ordenador y no borra automaticamente tus fotos originales ni carpetas de salida creadas junto a tus fotos.
 
 ## Carpetas
 
@@ -86,44 +95,35 @@ La deteccion automatica puede fallar, especialmente con matriculas lejanas, incl
 
 El procesamiento se hace localmente en el ordenador. La herramienta no sube fotos a internet ni intenta identificar personas.
 
-## Prueba en Ubuntu
+## Ejecutar en Ubuntu
 
-Para probar la deteccion y anonimizacion sin abrir la interfaz grafica:
+Si quieres abrir la interfaz grafica en Linux, instala primero Tkinter si tu distribucion no lo trae:
+
+```bash
+sudo apt install python3-tk
+```
+
+Despues puedes lanzarla desde la raiz del proyecto con:
+
+```bash
+./run_app_linux.sh
+```
+
+Tambien puedes ejecutarla directamente con:
+
+```bash
+source .venv/bin/activate
+python3 -m src.main
+```
+
+No uses `python3 src/main.py`, porque la aplicacion esta organizada como paquete Python y necesita arrancar como modulo.
+
+Si necesitas descargar de nuevo los modelos desde Ubuntu:
 
 ```bash
 python3 -m pip install -r requirements.txt
 python3 models/download_models.py
-python3 run_ubuntu_test.py --input fotos --output output_ubuntu_test --limit 10
 ```
-
-Opciones utiles:
-
-```bash
-python3 run_ubuntu_test.py --input una_foto.jpg --method pixelado
-python3 run_ubuntu_test.py --input fotos --no-faces
-python3 run_ubuntu_test.py --input fotos --no-plates
-python3 run_ubuntu_test.py --input fotos --face-model models/yolo_faces.pt --plate-model models/yolo_plates.pt
-```
-
-Las imagenes originales no se modifican.
-
-### Diagnostico de detecciones
-
-Para ver todas las clases detectadas por los modelos, sin anonimizar:
-
-```bash
-python3 run_ubuntu_test.py --diagnostic --input fotos --output output/diagnostico
-```
-
-Para revisar candidatos de baja confianza:
-
-```bash
-python3 run_ubuntu_test.py --diagnostic --input fotos --output output/diagnostico_baja_confianza --diagnostic-plate-confidence 0.01
-```
-
-El modo diagnostico guarda imagenes con cajas y etiquetas como `coco:car 0.91` o `matriculas:vehicle 0.49`.
-Por defecto usa estos umbrales: caras `>0.6`, matriculas `>0.4`, vehiculos `>0.2`.
-Cuando usas `--diagnostic-models vehicles`, solo se muestran clases COCO de vehiculos: `bicycle`, `car`, `motorcycle`, `bus` y `truck`.
 
 ## Si algo falla
 
