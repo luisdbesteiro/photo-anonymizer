@@ -26,11 +26,13 @@ MODELS = [
     ModelInfo(
         name="caras",
         output_name="yolo_faces.pt",
-        url="https://github.com/lindevs/yolov8-face/releases/download/1.0.1/yolov8n-face-lindevs.pt",
-        source="https://github.com/lindevs/yolov8-face",
-        license_name="MIT",
-        notes="Modelo YOLOv8n-Face de Lindevs para deteccion de caras. Uso previsto: herramienta interna.",
-        sha256="b038ca653b503453a94f6e12d76feca6840b2a97d7a1322b4498c5e922f29832",
+        url="https://huggingface.co/iitolstykh/YOLO-Face-Person-Detector/resolve/main/yolov8x_person_face.pt",
+        source="https://huggingface.co/iitolstykh/YOLO-Face-Person-Detector",
+        license_name="AGPL-3.0",
+        notes=(
+            "Modelo YOLOv8x para deteccion de caras y personas. "
+            "La aplicacion filtra solo la clase face para anonimizar caras."
+        ),
     ),
     ModelInfo(
         name="matriculas",
@@ -56,6 +58,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--models-dir", help="Carpeta donde guardar los modelos. Por defecto: esta carpeta.")
     parser.add_argument("--force", action="store_true", help="Vuelve a descargar aunque el archivo exista.")
     parser.add_argument("--list", action="store_true", help="Muestra los modelos configurados sin descargarlos.")
+    parser.add_argument(
+        "--only",
+        choices=[model.name for model in MODELS],
+        action="append",
+        help="Descarga solo el modelo indicado. Se puede repetir. Ejemplo: --only caras",
+    )
     return parser.parse_args()
 
 
@@ -63,8 +71,10 @@ def main() -> int:
     args = parse_args()
     models_dir = Path(args.models_dir) if args.models_dir else Path(__file__).resolve().parent
 
+    selected_models = [model for model in MODELS if not args.only or model.name in args.only]
+
     if args.list:
-        for model in MODELS:
+        for model in selected_models:
             print(f"{model.name}: {model.output_name}")
             print(f"  Origen: {model.source}")
             print(f"  Licencia declarada: {model.license_name}")
@@ -74,7 +84,7 @@ def main() -> int:
     models_dir.mkdir(parents=True, exist_ok=True)
     downloaded: list[ModelInfo] = []
 
-    for model in MODELS:
+    for model in selected_models:
         destination = models_dir / model.output_name
         if destination.exists() and not args.force:
             print(f"Ya existe {destination}. Usa --force para descargarlo de nuevo.")

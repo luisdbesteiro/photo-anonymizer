@@ -49,8 +49,6 @@ No desinstala Python del ordenador y no borra automaticamente tus fotos original
 
 ## Carpetas
 
-- `fotos/`: fotos originales o de prueba.
-- `output/`: salida de reserva si no se ha seleccionado ninguna carpeta de entrada.
 - `logs/`: registro de errores y procesamientos.
 - `src/`: codigo de la aplicacion.
 - `models/`: modelos YOLO preentrenados.
@@ -67,7 +65,7 @@ models/yolov8n.pt
 
 Necesitas tres modelos:
 
-- Uno entrenado para detectar caras.
+- Uno entrenado para detectar caras. El modelo recomendado para la prueba tambien detecta personas, pero la aplicacion filtra solo la clase `face`.
 - Otro entrenado para detectar matriculas.
 - Un modelo COCO general para detectar vehiculos y filtrar falsos positivos de matriculas.
 
@@ -77,6 +75,12 @@ Para uso interno, puedes descargar los modelos recomendados con:
 
 ```bash
 python models/download_models.py
+```
+
+Para sustituir solo el modelo de caras por el recomendado actualmente:
+
+```bash
+python models/download_models.py --only caras --force
 ```
 
 En Windows, despues de instalar dependencias, puedes hacer doble clic en:

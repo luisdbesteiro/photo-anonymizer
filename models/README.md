@@ -10,7 +10,7 @@ models/yolov8n.pt
 
 Importante:
 
-- `yolo_faces.pt` debe estar entrenado para detectar caras.
+- `yolo_faces.pt` debe estar entrenado para detectar caras. Si tambien detecta personas, la aplicacion filtra solo la clase `face`.
 - `yolo_plates.pt` debe estar entrenado para detectar matriculas.
 - `yolov8n.pt` es un modelo COCO general usado como contexto para detectar vehiculos y filtrar falsos positivos de matriculas.
 - Los modelos YOLO generales entrenados con COCO no suelen servir como unica solucion porque no incluyen matriculas ni caras como clases especificas.
@@ -20,7 +20,7 @@ Importante:
 
 Para esta version se recomienda:
 
-- Caras: `lindevs/yolov8-face`, modelo `yolov8n-face-lindevs.pt`, licencia declarada MIT.
+- Caras: `iitolstykh/YOLO-Face-Person-Detector`, modelo `yolov8x_person_face.pt`, licencia declarada AGPL-3.0. Detecta `face` y `person`; la aplicacion usa solo `face`.
 - Matriculas: `Koushim/yolov8-license-plate-detection`, archivo `best.pt`, licencia declarada MIT.
 - Vehiculos: `yolov8n.pt` de Ultralytics, clases COCO, licencia declarada AGPL-3.0.
 
@@ -28,6 +28,12 @@ Puedes descargarlos con:
 
 ```bash
 python models/download_models.py
+```
+
+Para sustituir solo el modelo de caras durante una prueba:
+
+```bash
+python models/download_models.py --only caras --force
 ```
 
 El script los guarda como:

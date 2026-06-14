@@ -10,7 +10,7 @@ from tkinter import filedialog, messagebox, ttk
 
 from .anonymizer import anonymize_regions
 from .debug_drawing import draw_debug_detections
-from .detector_faces import MIN_FACE_CONFIDENCE, detect_faces
+from .detector_faces import FACE_CLASS_NAMES, MIN_FACE_CONFIDENCE, detect_faces
 from .detector_plates import (
     MIN_CONTEXT_PLATE_CONFIDENCE,
     MIN_STANDALONE_PLATE_CONFIDENCE,
@@ -380,6 +380,7 @@ class AnonymizerApp(tk.Tk):
                     image,
                     self.face_model_path,
                     self.face_confidence.get(),
+                    class_names=FACE_CLASS_NAMES,
                 )
             )
 
