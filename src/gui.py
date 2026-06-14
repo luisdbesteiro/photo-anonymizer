@@ -9,12 +9,16 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from .anonymizer import anonymize_regions
-from .debug_drawing import draw_detections
+from .debug_drawing import draw_debug_detections
 from .detector_faces import MIN_FACE_CONFIDENCE, detect_faces
 from .detector_plates import (
     MIN_CONTEXT_PLATE_CONFIDENCE,
     MIN_STANDALONE_PLATE_CONFIDENCE,
     MIN_VEHICLE_CONFIDENCE,
+    PLATE_CLASS_NAMES,
+    PLATE_IMAGE_SIZE,
+    VEHICLE_CLASS_NAMES,
+    VEHICLE_IMAGE_SIZE,
     detect_plates,
 )
 from .utils import (
@@ -25,7 +29,14 @@ from .utils import (
     read_image,
     write_image,
 )
-from .yolo_detector import DEFAULT_FACE_MODEL, DEFAULT_PLATE_MODEL, DEFAULT_VEHICLE_MODEL, check_yolo_ready
+from .yolo_detector import (
+    DEFAULT_FACE_MODEL,
+    DEFAULT_PLATE_MODEL,
+    DEFAULT_VEHICLE_MODEL,
+    Detection,
+    check_yolo_ready,
+    detect_with_yolo_details,
+)
 
 
 @dataclass
@@ -335,7 +346,7 @@ class AnonymizerApp(tk.Tk):
                     raise ValueError("No se pudo guardar la imagen procesada.")
 
                 if save_annotated_debug:
-                    annotated_image = draw_detections(image, face_boxes, plate_boxes)
+                    annotated_image = draw_debug_detections(image, self._detect_debug_detections(image))
                     annotated_path = make_output_path(image_path, annotated_dir, suffix="_anotada")
                     if not write_image(annotated_path, annotated_image, source_path=image_path):
                         raise ValueError("No se pudo guardar la imagen anotada de depuracion.")
@@ -358,6 +369,44 @@ class AnonymizerApp(tk.Tk):
             self.after(0, self._update_progress, progress, index, total)
 
         self.after(0, self._finish_processing, result, output_dir, annotated_dir if save_annotated_debug else None)
+
+    def _detect_debug_detections(self, image) -> list[tuple[str, Detection]]:
+        detections: list[tuple[str, Detection]] = []
+
+        if self.detect_faces_enabled.get():
+            detections.extend(
+                ("cara", detection)
+                for detection in detect_with_yolo_details(
+                    image,
+                    self.face_model_path,
+                    self.face_confidence.get(),
+                )
+            )
+
+        if self.detect_plates_enabled.get():
+            plate_confidence = min(self.plate_confidence.get(), self.plate_context_confidence.get())
+            detections.extend(
+                ("matricula", detection)
+                for detection in detect_with_yolo_details(
+                    image,
+                    self.plate_model_path,
+                    plate_confidence,
+                    class_names=PLATE_CLASS_NAMES,
+                    image_size=PLATE_IMAGE_SIZE,
+                )
+            )
+            detections.extend(
+                ("vehiculo", detection)
+                for detection in detect_with_yolo_details(
+                    image,
+                    self.vehicle_model_path,
+                    self.vehicle_confidence.get(),
+                    class_names=VEHICLE_CLASS_NAMES,
+                    image_size=VEHICLE_IMAGE_SIZE,
+                )
+            )
+
+        return detections
 
     def _update_progress(self, progress: float, index: int, total: int) -> None:
         self.progress.set(progress)

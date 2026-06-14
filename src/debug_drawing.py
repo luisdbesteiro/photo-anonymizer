@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from .anonymizer import Box
+from .yolo_detector import Detection
 
 
 def draw_detections(image: np.ndarray, face_boxes: list[Box], plate_boxes: list[Box]) -> np.ndarray:
@@ -13,6 +14,23 @@ def draw_detections(image: np.ndarray, face_boxes: list[Box], plate_boxes: list[
     for box in plate_boxes:
         _draw_box(result, box, "matricula", (255, 80, 0))
     return result
+
+
+def draw_debug_detections(image: np.ndarray, detections: list[tuple[str, Detection]]) -> np.ndarray:
+    result = image.copy()
+    for source, detection in detections:
+        x, y, w, h, score, class_name = detection
+        label = f"{source}:{class_name} {score:.2f}"
+        _draw_box(result, (x, y, w, h), label, _color_for_source(source))
+    return result
+
+
+def _color_for_source(source: str) -> tuple[int, int, int]:
+    if source == "cara":
+        return (0, 180, 0)
+    if source == "matricula":
+        return (255, 80, 0)
+    return (0, 120, 255)
 
 
 def _draw_box(image: np.ndarray, box: Box, label: str, color: tuple[int, int, int]) -> None:
