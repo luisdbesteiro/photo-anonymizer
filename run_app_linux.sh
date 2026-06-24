@@ -8,7 +8,7 @@ if [ ! -f ".venv/bin/activate" ]; then
     echo "Crea el entorno e instala dependencias antes de ejecutar la aplicacion:"
     echo "  python3 -m venv .venv"
     echo "  source .venv/bin/activate"
-    echo "  python3 -m pip install -r requirements.txt"
+    echo "  python3 -m pip install -r installer_scripts/requirements.txt"
     exit 1
 fi
 
