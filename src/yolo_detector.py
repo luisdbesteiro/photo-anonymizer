@@ -80,7 +80,7 @@ def check_yolo_ready(model_paths: list[Path]) -> None:
         import ultralytics  # noqa: F401
     except ImportError as exc:
         raise RuntimeError(
-            "Falta la dependencia ultralytics. Ejecuta install_windows.bat o instala requirements.txt."
+            "Falta la dependencia ultralytics. Ejecuta run_app.bat o installer_scripts\\install_windows.bat."
         ) from exc
 
 
@@ -92,7 +92,7 @@ def _load_model(model_path: str):
         from ultralytics import YOLO
     except ImportError as exc:
         raise RuntimeError(
-            "Falta la dependencia ultralytics. Ejecuta install_windows.bat o instala requirements.txt."
+            "Falta la dependencia ultralytics. Ejecuta run_app.bat o installer_scripts\\install_windows.bat."
         ) from exc
 
     return YOLO(model_path)

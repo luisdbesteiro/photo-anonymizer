@@ -6,13 +6,15 @@ Herramienta local para detectar caras y posibles matriculas en fotografias, anon
 
 1. Instala Python 3 desde <https://www.python.org/downloads/>.
 2. Durante la instalacion de Python, marca la opcion **Add python.exe to PATH**.
-3. Haz doble clic en `install_windows.bat`.
-4. Haz doble clic en `models\download_models_windows.bat` si necesitas descargar de nuevo los modelos.
-5. Espera a que aparezca el mensaje de modelos listos.
+3. Haz doble clic en `run_app.bat`.
+4. Espera a que se instalen las dependencias y se descarguen los modelos.
+5. Si la descarga de modelos falla, revisa la conexion a internet y ejecuta `installer_scripts\download_models_windows.bat` mas tarde.
+
+Tambien puedes hacer doble clic en `installer_scripts\install_windows.bat` si prefieres instalar todo antes de abrir la aplicacion.
 
 ## Ejecutar la aplicacion
 
-Haz doble clic en `run_app.bat`.
+Haz doble clic en `run_app.bat`. Si no hay instalacion previa, el script la prepara automaticamente y despues abre la aplicacion.
 
 Se abrira una ventana donde puedes:
 
@@ -41,7 +43,7 @@ La herramienta intenta conservar en las copias anonimizadas los metadatos de la 
 
 ## Desinstalar en Windows
 
-Haz doble clic en `uninstall_windows.bat`.
+Haz doble clic en `installer_scripts\uninstall_windows.bat`.
 
 El script elimina el entorno virtual `.venv`, que es donde se instalan las dependencias de Python de esta herramienta. Tambien puede borrar, si lo confirmas, los modelos descargados, los logs y las carpetas de salida locales.
 
@@ -52,6 +54,16 @@ No desinstala Python del ordenador y no borra automaticamente tus fotos original
 - `logs/`: registro de errores y procesamientos.
 - `src/`: codigo de la aplicacion.
 - `models/`: modelos YOLO preentrenados.
+- `installer_scripts/`: instalacion, desinstalacion, dependencias y utilidades auxiliares.
+- `input/`: carpeta opcional para dejar imagenes de entrada.
+- `output/`: carpeta opcional para resultados locales.
+
+La raiz del proyecto queda reservada para lo esencial:
+
+- `run_app.bat`: archivo principal para abrir la herramienta en Windows.
+- `run_app_linux.sh`: archivo principal para abrir la herramienta en Linux.
+- `README.md`: instrucciones de uso.
+- `AGENTS.md`: notas internas para desarrollo.
 
 ## Modelos YOLO
 
@@ -74,20 +86,22 @@ No uses un modelo YOLO general de COCO como unica solucion, porque normalmente n
 Para uso interno, puedes descargar los modelos recomendados con:
 
 ```bash
-python models/download_models.py
+python src/download_models.py
 ```
 
 Para sustituir solo el modelo de caras por el recomendado actualmente:
 
 ```bash
-python models/download_models.py --only caras --force
+python src/download_models.py --only caras --force
 ```
 
 En Windows, despues de instalar dependencias, puedes hacer doble clic en:
 
 ```text
-models\download_models_windows.bat
+installer_scripts\download_models_windows.bat
 ```
+
+Normalmente no hace falta ejecutar ese archivo durante la primera instalacion, porque `installer_scripts\install_windows.bat` ya descarga los modelos. Usalo si necesitas reintentar la descarga.
 
 El script crea `models/MODELS_DOWNLOADED.md` con origen, licencia declarada y fecha de descarga.
 
@@ -125,13 +139,13 @@ No uses `python3 src/main.py`, porque la aplicacion esta organizada como paquete
 Si necesitas descargar de nuevo los modelos desde Ubuntu:
 
 ```bash
-python3 -m pip install -r requirements.txt
-python3 models/download_models.py
+python3 -m pip install -r installer_scripts/requirements.txt
+python3 src/download_models.py
 ```
 
 ## Si algo falla
 
-- Ejecuta de nuevo `install_windows.bat`.
+- Ejecuta de nuevo `run_app.bat` o `installer_scripts\install_windows.bat`.
 - Comprueba que Python esta instalado y agregado al PATH.
 - Revisa si se creo un archivo en `logs/anonimizador.log`.
 - Si una imagen concreta da error, prueba con otra imagen `.jpg`, `.jpeg` o `.png`.

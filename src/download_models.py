@@ -55,7 +55,7 @@ MODELS = [
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Descarga los modelos YOLO recomendados para uso interno.")
-    parser.add_argument("--models-dir", help="Carpeta donde guardar los modelos. Por defecto: esta carpeta.")
+    parser.add_argument("--models-dir", help="Carpeta donde guardar los modelos. Por defecto: models/.")
     parser.add_argument("--force", action="store_true", help="Vuelve a descargar aunque el archivo exista.")
     parser.add_argument("--list", action="store_true", help="Muestra los modelos configurados sin descargarlos.")
     parser.add_argument(
@@ -69,7 +69,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    models_dir = Path(args.models_dir) if args.models_dir else Path(__file__).resolve().parent
+    project_root = Path(__file__).resolve().parents[1]
+    models_dir = Path(args.models_dir) if args.models_dir else project_root / "models"
 
     selected_models = [model for model in MODELS if not args.only or model.name in args.only]
 
@@ -103,6 +104,13 @@ def main() -> int:
                 destination.unlink()
             print(f"Error descargando {model.name}: {exc}")
             return 1
+
+    missing_models = [model.output_name for model in selected_models if not (models_dir / model.output_name).exists()]
+    if missing_models:
+        print("Faltan modelos despues de la descarga:")
+        for model_name in missing_models:
+            print(f"- {model_name}")
+        return 1
 
     _write_manifest(models_dir, downloaded)
     print()

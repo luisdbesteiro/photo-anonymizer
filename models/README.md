@@ -27,13 +27,13 @@ Para esta version se recomienda:
 Puedes descargarlos con:
 
 ```bash
-python models/download_models.py
+python src/download_models.py
 ```
 
 Para sustituir solo el modelo de caras durante una prueba:
 
 ```bash
-python models/download_models.py --only caras --force
+python src/download_models.py --only caras --force
 ```
 
 El script los guarda como:
