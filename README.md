@@ -2,19 +2,19 @@
 
 Herramienta local para detectar caras y posibles matriculas en fotografias, anonimizarlas y guardar copias procesadas sin modificar los originales.
 
-## Instalacion en Windows
+## Instalacion en Linux
 
-1. Instala Python 3 desde <https://www.python.org/downloads/>.
-2. Durante la instalacion de Python, marca la opcion **Add python.exe to PATH**.
-3. Haz doble clic en `run_app.bat`.
+1. Instala Python 3, venv y Tkinter con el gestor de paquetes de tu distribucion.
+2. En Ubuntu/Debian suele ser: `sudo apt install python3 python3-venv python3-tk`.
+3. Desde la raiz del proyecto, ejecuta `./run_app.sh`.
 4. Espera a que se instalen las dependencias y se descarguen los modelos.
-5. Si la descarga de modelos falla, revisa la conexion a internet y ejecuta `installer_scripts\download_models_windows.bat` mas tarde.
+5. Si la descarga de modelos falla, revisa la conexion a internet y ejecuta `./installer_scripts/download_models_linux.sh` mas tarde.
 
-Tambien puedes hacer doble clic en `installer_scripts\install_windows.bat` si prefieres instalar todo antes de abrir la aplicacion.
+Tambien puedes ejecutar `./installer_scripts/install_linux.sh` si prefieres instalar todo antes de abrir la aplicacion.
 
 ## Ejecutar la aplicacion
 
-Haz doble clic en `run_app.bat`. Si no hay instalacion previa, el script la prepara automaticamente y despues abre la aplicacion.
+Ejecuta `./run_app.sh`. Si no hay instalacion previa, el script la prepara automaticamente y despues abre la aplicacion.
 
 Se abrira una ventana donde puedes:
 
@@ -41,9 +41,9 @@ foto_001.jpg
 
 La herramienta intenta conservar en las copias anonimizadas los metadatos de la fotografia original, como EXIF, perfil de color, DPI y textos de PNG cuando el formato lo permite. Ten en cuenta que esos metadatos pueden incluir informacion sensible, por ejemplo ubicacion GPS si la camara o el movil la guardo.
 
-## Desinstalar en Windows
+## Desinstalar en Linux
 
-Haz doble clic en `installer_scripts\uninstall_windows.bat`.
+Ejecuta `./installer_scripts/uninstall_linux.sh`.
 
 El script elimina el entorno virtual `.venv`, que es donde se instalan las dependencias de Python de esta herramienta. Tambien puede borrar, si lo confirmas, los modelos descargados, los logs y las carpetas de salida locales.
 
@@ -60,8 +60,7 @@ No desinstala Python del ordenador y no borra automaticamente tus fotos original
 
 La raiz del proyecto queda reservada para lo esencial:
 
-- `run_app.bat`: archivo principal para abrir la herramienta en Windows.
-- `run_app_linux.sh`: archivo principal para abrir la herramienta en Linux.
+- `run_app.sh`: archivo principal para abrir la herramienta en Linux.
 - `README.md`: instrucciones de uso.
 - `AGENTS.md`: notas internas para desarrollo.
 
@@ -95,13 +94,13 @@ Para sustituir solo el modelo de caras por el recomendado actualmente:
 python src/download_models.py --only caras --force
 ```
 
-En Windows, despues de instalar dependencias, puedes hacer doble clic en:
+En Linux, despues de instalar dependencias, puedes ejecutar:
 
 ```text
-installer_scripts\download_models_windows.bat
+./installer_scripts/download_models_linux.sh
 ```
 
-Normalmente no hace falta ejecutar ese archivo durante la primera instalacion, porque `installer_scripts\install_windows.bat` ya descarga los modelos. Usalo si necesitas reintentar la descarga.
+Normalmente no hace falta ejecutar ese archivo durante la primera instalacion, porque `installer_scripts/install_linux.sh` ya descarga los modelos. Usalo si necesitas reintentar la descarga.
 
 El script crea `models/MODELS_DOWNLOADED.md` con origen, licencia declarada y fecha de descarga.
 
@@ -115,7 +114,7 @@ El procesamiento se hace localmente en el ordenador. La herramienta no sube foto
 
 ## Ejecutar en Ubuntu
 
-Si quieres abrir la interfaz grafica en Linux, instala primero Tkinter si tu distribucion no lo trae:
+Si tu distribucion no trae Tkinter, instalalo antes de abrir la interfaz grafica:
 
 ```bash
 sudo apt install python3-tk
@@ -124,7 +123,7 @@ sudo apt install python3-tk
 Despues puedes lanzarla desde la raiz del proyecto con:
 
 ```bash
-./run_app_linux.sh
+./run_app.sh
 ```
 
 Tambien puedes ejecutarla directamente con:
@@ -145,7 +144,7 @@ python3 src/download_models.py
 
 ## Si algo falla
 
-- Ejecuta de nuevo `run_app.bat` o `installer_scripts\install_windows.bat`.
-- Comprueba que Python esta instalado y agregado al PATH.
+- Ejecuta de nuevo `./run_app.sh` o `./installer_scripts/install_linux.sh`.
+- Comprueba que Python, venv y Tkinter estan instalados.
 - Revisa si se creo un archivo en `logs/anonimizador.log`.
 - Si una imagen concreta da error, prueba con otra imagen `.jpg`, `.jpeg` o `.png`.

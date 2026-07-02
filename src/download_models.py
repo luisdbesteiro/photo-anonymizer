@@ -115,7 +115,7 @@ def main() -> int:
     _write_manifest(models_dir, downloaded)
     print()
     print("Modelos listos.")
-    print("Puedes ejecutar run_app.bat en Windows o run_app_linux.sh en Ubuntu.")
+    print("Puedes ejecutar ./run_app.sh en Linux.")
     return 0
 
 
