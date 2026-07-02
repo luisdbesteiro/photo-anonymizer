@@ -43,8 +43,9 @@ def anonymize_regions(image: np.ndarray, boxes: list[Box], method: str) -> np.nd
 
 def _strong_blur(region: np.ndarray) -> np.ndarray:
     min_side = max(3, min(region.shape[:2]))
-    kernel = max(31, (min_side // 2) | 1)
-    return cv2.GaussianBlur(region, (kernel, kernel), 0)
+    kernel = max(61, min_side | 1)
+    blurred = cv2.GaussianBlur(region, (kernel, kernel), 0)
+    return cv2.GaussianBlur(blurred, (kernel, kernel), 0)
 
 
 def _pixelate(region: np.ndarray) -> np.ndarray:

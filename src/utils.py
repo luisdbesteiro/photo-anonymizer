@@ -40,7 +40,7 @@ def collect_images(paths: list[Path]) -> list[Path]:
 
 
 def default_output_dir_for_paths(paths: list[Path], fallback: Path) -> Path:
-    return _default_sibling_dir_for_paths(paths, fallback, "_anonimizadas")
+    return _default_sibling_dir_for_paths(paths, fallback, "_pixeladas")
 
 
 def default_annotated_dir_for_paths(paths: list[Path], fallback: Path) -> Path:
@@ -59,7 +59,7 @@ def _default_sibling_dir_for_paths(paths: list[Path], fallback: Path, suffix: st
     return input_dir.parent / f"{input_dir.name}{suffix}"
 
 
-def make_output_path(input_path: Path, output_dir: Path, suffix: str = "_anonimizada") -> Path:
+def make_output_path(input_path: Path, output_dir: Path, suffix: str = "") -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     extension = input_path.suffix.lower() if input_path.suffix else ".jpg"
     candidate = output_dir / f"{input_path.stem}{suffix}{extension}"
