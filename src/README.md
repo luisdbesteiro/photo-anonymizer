@@ -8,4 +8,4 @@ Esta carpeta contiene el paquete Python de la herramienta.
 - `anonymizer.py`: desenfoque, pixelado y recuadro negro.
 - `download_models.py`: descarga los modelos YOLO en `models/`.
 
-Ejecutar la aplicacion desde la raiz con `run_app.bat` en Windows o `./run_app_linux.sh` en Linux.
+Ejecutar la aplicacion desde la raiz con `run_app.bat`.

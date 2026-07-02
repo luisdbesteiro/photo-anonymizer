@@ -61,7 +61,6 @@ No desinstala Python del ordenador y no borra automaticamente tus fotos original
 La raiz del proyecto queda reservada para lo esencial:
 
 - `run_app.bat`: archivo principal para abrir la herramienta en Windows.
-- `run_app_linux.sh`: archivo principal para abrir la herramienta en Linux.
 - `README.md`: instrucciones de uso.
 - `AGENTS.md`: notas internas para desarrollo.
 
@@ -112,36 +111,6 @@ Esta herramienta esta planteada para uso interno. No redistribuirla fuera de la 
 La deteccion automatica puede fallar, especialmente con matriculas lejanas, inclinadas, borrosas o parcialmente tapadas. Revisa siempre las imagenes procesadas antes de compartirlas.
 
 El procesamiento se hace localmente en el ordenador. La herramienta no sube fotos a internet ni intenta identificar personas.
-
-## Ejecutar en Ubuntu
-
-Si quieres abrir la interfaz grafica en Linux, instala primero Tkinter si tu distribucion no lo trae:
-
-```bash
-sudo apt install python3-tk
-```
-
-Despues puedes lanzarla desde la raiz del proyecto con:
-
-```bash
-./run_app_linux.sh
-```
-
-Tambien puedes ejecutarla directamente con:
-
-```bash
-source .venv/bin/activate
-python3 -m src.main
-```
-
-No uses `python3 src/main.py`, porque la aplicacion esta organizada como paquete Python y necesita arrancar como modulo.
-
-Si necesitas descargar de nuevo los modelos desde Ubuntu:
-
-```bash
-python3 -m pip install -r installer_scripts/requirements.txt
-python3 src/download_models.py
-```
 
 ## Si algo falla
 
